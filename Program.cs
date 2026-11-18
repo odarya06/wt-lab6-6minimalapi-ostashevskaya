@@ -63,7 +63,8 @@ app.MapGet("/api/products", (string? search, string? category) =>
 })
 .WithTags("Products")
 .WithSummary("Получить список товаров")
-.WithDescription("Query-параметры search и category необязательны.");
+.WithDescription("Query-параметры search и category необязательны.")
+.Produces<List<Product>>(StatusCodes.Status200OK);
 
 // GET /api/products/{id} — товар по идентификатору.
 app.MapGet("/api/products/{id:int}", (int id) =>
@@ -73,7 +74,9 @@ app.MapGet("/api/products/{id:int}", (int id) =>
 })
 .WithTags("Products")
 .WithSummary("Получить товар по идентификатору")
-.WithName("GetProduct");
+.WithName("GetProduct")
+.Produces<Product>(StatusCodes.Status200OK)
+.Produces(StatusCodes.Status404NotFound);
 
 // POST /api/products — создание товара, идентификатор генерируется автоматически.
 app.MapPost("/api/products", (Product product) =>
@@ -89,7 +92,9 @@ app.MapPost("/api/products", (Product product) =>
 })
 .WithTags("Products")
 .WithSummary("Создать товар")
-.WithDescription("Идентификатор генерируется сервером, в теле запроса его передавать не нужно.");
+.WithDescription("Идентификатор генерируется сервером, в теле запроса его передавать не нужно.")
+.Produces<Product>(StatusCodes.Status201Created)
+.Produces(StatusCodes.Status400BadRequest);
 
 // PUT /api/products/{id} — изменение товара.
 app.MapPut("/api/products/{id:int}", (int id, Product updatedProduct) =>
@@ -111,7 +116,10 @@ app.MapPut("/api/products/{id:int}", (int id, Product updatedProduct) =>
     return Results.Ok(updatedProduct);
 })
 .WithTags("Products")
-.WithSummary("Изменить товар");
+.WithSummary("Изменить товар")
+.Produces<Product>(StatusCodes.Status200OK)
+.Produces(StatusCodes.Status400BadRequest)
+.Produces(StatusCodes.Status404NotFound);
 
 // DELETE /api/products/{id} — удаление товара.
 app.MapDelete("/api/products/{id:int}", (int id) =>
@@ -120,7 +128,9 @@ app.MapDelete("/api/products/{id:int}", (int id) =>
     return removed ? Results.NoContent() : Results.NotFound();
 })
 .WithTags("Products")
-.WithSummary("Удалить товар");
+.WithSummary("Удалить товар")
+.Produces(StatusCodes.Status204NoContent)
+.Produces(StatusCodes.Status404NotFound);
 
 // Render передаёт порт в переменной окружения PORT.
 var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
