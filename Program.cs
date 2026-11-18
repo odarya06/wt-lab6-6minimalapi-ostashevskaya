@@ -27,7 +27,9 @@ app.UseSwaggerUI(options =>
 });
 
 // GET / — проверка работоспособности приложения.
-app.MapGet("/", () => "Minimal API работает!");
+app.MapGet("/", () => "Minimal API работает!")
+    .WithTags("Info")
+    .WithSummary("Проверка работоспособности приложения");
 
 // GET /api/info — сведения о приложении в формате JSON.
 app.MapGet("/api/info", () => new
